@@ -1,0 +1,422 @@
+body {
+    width: 100%;
+    overflow: scroll;
+    margin: 0px;
+    /* background-color: darkslategray; */
+    background-image: url('/images/aurora2-min.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.title {
+    line-height: 70px;
+    width: auto;
+    vertical-align: middle;
+    color: white;
+    text-shadow: 2px 2px 4px black;
+    margin: 0;
+}
+
+.bannerContainer {
+    position: fixed;
+    top: 0px;
+    overflow: visible;
+    width: 100%;
+    z-index: 99;
+}
+
+.bannerSpacer {
+    height: 0;
+    width: 100%;
+    /* background-image: url('/images/bannerBackground.jpg');
+    background-size: auto 100%; */
+}
+
+.banner {
+    width: 100vw;
+    left: 0px;
+    box-sizing: border-box;
+    padding: 0 1vw 0 1vw;
+    margin: 0 1px 0 1px;
+    position: relative;
+    
+    display: table-cell;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+#topBanner {
+    height: 70px;
+    background: linear-gradient(#67d567, #202020);
+    border-bottom: 1px solid #000000;
+    box-sizing: border-box;
+}
+
+/* 67d5d5 is cyan c1ff7b is some bs tan color */
+
+#topBanner > * {
+    float: right;
+    min-width: 5%;
+    border-bottom: 5px solid #67d567;
+    height: 100%;
+}
+
+.bannerLinks {
+    margin: 0 1px 0 1px;
+}
+
+.bannerLinks > * {
+    /* todo: i wish i could dynamically size the header to be the size of content from rem's and such... */
+    color: white;
+    text-shadow: 2px 2px 4px black;
+}
+
+.bannerLinksText{
+    width: 100%;
+    font-size: 1em;
+    text-align: center;
+    padding-top: 0.2rem;
+}
+
+.fas {
+    padding-top: .5rem;
+    text-align: center;
+    width: 100%;
+    font-size: 2rem;
+}
+
+.bannerLinks:hover {
+    background-color: #67d567;
+}
+
+#leftOfTheBanner {
+    float: left;
+    margin: 0 5% 0 5%;
+    width: auto;
+}
+
+#rightOfTheBanner {
+    margin-right: 5%;
+}
+
+.store {
+
+}
+
+.storeDropdown {
+    top: 75px;
+    width: 35vw;
+    right: 0vw;
+    display: none;
+    position: absolute;
+    background: linear-gradient(#202020,#161616);
+    border: 1px solid black;
+    color: #a3c5a3;
+    /* text-shadow: none; */
+    box-shadow: 1px 1pxd 2px;
+}
+
+.storeDropdown > * {
+    padding: 1vw;
+}
+
+.storeDropdown ul {
+    list-style-type: none;
+}
+
+.store:hover .storeDropdown {
+    display: block;
+}
+
+.storeTitle {
+    display: block;
+    float: left;
+    margin-block-end: 0;
+    margin-block-start: 0;
+    vertical-align: middle;
+}
+
+.shoppingCartContainer {
+    display: block;
+    float: right;
+    background: #c1ff7b;
+    border: 2px solid black;
+    border-radius: 5px;
+    box-shadow: white;
+}
+
+.shoppingCartContainer .fas {
+    padding-bottom: 0.5rem;
+}
+
+.shoppingCartContainer:active {
+    background: #485f2e;
+}
+
+.shoppingCartContainer:hover .fas {
+    color: #4e4e4e;
+}
+
+.storeDescription {
+    width: 100%;
+}
+
+.storeTitleContainer {
+    width: 100%;
+    overflow: hidden;
+}
+
+
+/* block content */
+
+.introSpacer {
+    top: 0px;
+    height: 70px;
+    width: 100%;
+}
+
+.flashes {
+    width: 100%;
+    display: block;
+}
+
+#flashes {
+    position: static;
+}
+
+#bannerFlashes {
+    top: 75px;
+    position: absolute;
+}
+
+.flash {
+    /* width: 100%; */
+    display: block;
+    position: static;
+    margin: 1% 5% 1% 5%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.flash>* {
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+}
+
+.success {
+    border: 5px solid #67d567;
+    border-radius: 5px;
+    background: #a1d1a1;
+}
+
+.failure {
+    border: 5px solid #ce3232;
+    border-radius: 5px;
+    background: #c27878;
+}
+
+.intro {
+    width: 100%;
+    position: static;
+    overflow: hidden;
+    /* margin-left: 4%;
+    margin-right: 4%; */
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.introContainer {
+    visibility: hidden;
+}
+
+.loginAndSampleContainer, .registerContainer {
+    /* http://jsfiddle.net/4xxvb/3/*/
+    display: block;
+    flex-basis: 650px;
+    min-width: 200px;
+}
+
+.card {
+    padding: 1%;
+    background: white;
+    border: 5px solid #67d567;
+    border-radius: 5px;
+    margin: 4%;
+}
+
+.introH3 {
+    font-size: 1.2em;
+    margin: 1em 0em 1em 0em;
+    margin-block-start: .6em;
+    margin-block-end: .6em;
+}
+
+form > label {
+    font-size: 1.15em;
+}
+
+.submitButton {
+    width: calc(100% - 4px);
+    padding: 10px;
+    background-color: #67d567;
+    /* will-change: transform; investigate */
+    border: 1px solid #3b773b;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.submitButton:hover {
+    background-color: #408640
+}
+
+.loginInput, .registerInput {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 20px;
+    margin: 5px 0px 5px 0px;
+    border: 3px solid #67d567;
+    border-radius: 5px;
+}
+
+.readoutSpacer {
+    height: 50px;
+    width: 100%;
+    position: static;
+    display: block;
+}
+
+.readout {
+    position: static;
+    margin-left: 8vw;
+    margin-right: 8vw;
+    min-height: 120vh;
+}
+
+.readoutBanner {
+    z-index: 10;
+    
+    position: sticky;
+    top: 76px;
+    height: 30px;
+    overflow: visible;
+    box-sizing: border-box;
+    background: linear-gradient(#67d567, #415826);
+    /* -color:  #F8333C; */
+    border: 1px solid #67d567;
+}
+
+.readoutBanner > * {
+    height: 100%;
+    display: table-cell;
+    width: auto;
+    position: relative;
+    box-sizing: border-box;
+
+}
+
+.readoutBanner .bannerLinksText {
+    border-bottom: 3px solid red;
+    color: black;
+    text-shadow: none;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+#setupCables:hover #setupCablesDropdown {
+    display: block;
+}
+
+#setupCablesDropdown {
+    top: 25px;
+    width: 100vw;
+    height: auto;
+    left: -1vw;
+    background: red;
+    display: none;
+    position: absolute;
+    color: white;
+}
+
+#bins {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.bin {
+    background: lightgrey;
+
+    border: 5px solid #67d567;
+    border-radius: 5px;
+    padding: 1vw;
+    margin: 1px;
+    display: inline-block;
+}
+
+.binHeader {
+    width: 100%;
+    overflow: hidden;
+    margin: auto;
+}
+
+.binHeader > * {
+    display: block;
+    overflow: visible;
+    float: left;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    line-height: 3rem;
+    text-align: center;
+}
+
+.binHeader > p {
+    padding-left: 1vw;
+}
+
+.binBackground {
+    height: 247px;
+    margin-left: -1vw;
+    margin-bottom: -1vw;
+    width: 140px;
+    display: block;
+    float: left;
+    background-repeat: no-repeat;
+    background-image: url('/images/binAsBackground.jpg');
+}
+
+.binCables {
+    padding-left: 1vw;
+    display: block;
+    float: left;
+}
+
+.cableTable tr:nth-child(odd) {
+    background-color: white;
+}
+
+.cableTable tr:nth-child(even) {
+    background-color: #86cc86;
+}
+
+th, td {
+    padding: 0.4rem;
+}
+
+table {
+    border-spacing: 0;
+    border: 1px solid #67d567;
+}
+
+.cableTable td {
+    text-align: center;
+}
+
+sup {
+    line-height: 0;
+}
+/* equidistant: https://css-tricks.com/equidistant-objects-with-css/ */

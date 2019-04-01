@@ -1,0 +1,13 @@
+block content
+    for bin in user.binMaster.bins
+        .bins 
+            h1 #{bin.bin}
+            for cable in bin.cables
+                .cables
+                    h4 #{cable.cable}
+                        each sensor, index in cable.sensors
+                            .sensors
+                                if index == 0
+                                    h6 Top sensor
+                                else
+                                    h6 sensor #{index}

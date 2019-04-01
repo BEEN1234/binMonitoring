@@ -1,0 +1,15 @@
+mixin sensorCard(bSensor, index)
+    h3 #{bSensor.name} 
+    button.body__remove.remove(onclick="dbRemove('anyname', '"+ bSensor._id +"', 'rb'), suicide('bSensor"+ index + "')") Remove
+    label(for="ara") Please add the temperature you would like to recieve an alert at: 
+    input(type="number", name="ara", id="ara"+index, value=bSensor.ara)
+    button.button(onclick="dbUpdate('ara"+ index +"', '"+ bSensor._id +"', 'ara')") Submit
+    .dateSelector
+        label(for="start") Start Date
+        input(type="date", name="start", id="start"+index, value=bSensor.start.toISOString().slice(0, 10)||2018-01-01)
+        label(for="end") End Date
+        input(type="date", name="end", id="end"+index, value=bSensor.end.toISOString().slice(0, 10))
+        button(onclick='makePlotlyGraph(' + index + ', \'' + bSensor.sensorId + '\', "'+ bSensor._id +'", true)') Get reads
+        p OR
+        button(onclick='makePlotlyGraph(' + index + ', \'' + bSensor.sensorId + '\', "'+ bSensor._id +'", false)') Stream last 24 hours to present
+    div.myDiv(id="myDiv"+index) 

@@ -1,0 +1,87 @@
+.banner {
+    /* position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 70px;
+    background: #5e57f0;
+    border-bottom: 5px solid black; */
+}
+
+.banner > * {
+    float: right;
+    /* padding: 0% 1% 0% 1%; */
+    
+    display: table-cell;
+    /* height: 100%;
+    font-size: 1em;
+    line-height: 70px;
+    vertical-align: middle; */
+}
+
+#leftOfTheBanner {
+    float: left;
+    /* padding-left: 5%;
+    padding-right: 5%;   */
+}
+/* 
+#rightOfTheBanner {
+    padding-right: 5%;
+}
+
+h1 {
+    margin: 0;
+} */
+
+/* .banner * h3 {
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.title {
+    padding-left: 0.5em;
+} */
+/*
+    .help {
+        float: left;
+        display: block;
+    }
+
+    .store {
+        float: left;
+        display: block;
+    }
+
+    .userControl {
+        float: left;
+        display: block;
+    } */
+
+/* block content */
+
+.intro {
+    width: 100%;
+    top: 75px;
+    overflow: hidden;
+    height: 300%;
+    left: 0px;
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    background-image: url('/images/grainFieldBackground.jpg');
+}
+
+.intro > * {
+    float: left;
+    display: table-cell;
+    width: 40%;
+    height: 18%;
+    padding: 1%;
+    margin: 3.5%;
+    background: white;
+    border: 5px solid black;
+}
+
+
+

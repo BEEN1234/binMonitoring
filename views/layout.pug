@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    title= title
+    //- link(rel='stylesheet', href='/stylesheets/style.css') //-for readout of cotoonMaster
+    link(rel="stylesheet", href="/stylesheets/auroraStyle.css")
+    link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/solid.css" integrity="sha384-r/k8YTFqmlOaqRkZuSiE9trsrDXkh07mRaoGBMoDcmA58OHILZPsk29i2BsFng1B" crossorigin="anonymous")
+    link(rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/fontawesome.css" integrity="sha384-4aon80D8rXCGx9ayDt85LbyUHeMWd3UiBaWliBlJ53yzm9hqN21A+o1pqoyK04h+" crossorigin="anonymous")
+  body
+    .bannerContainer
+      .bannerSpacer
+      .banner#topBanner
+        .title#leftOfTheBanner
+          h1.title Aurora
+        .userControl.bannerLinks#rightOfTheBanner 
+          .fas.fa-sign-out-alt
+          .bannerLinksText Logout
+        .store.bannerLinks
+          .fas.fa-store-alt
+          .bannerLinksText Shop
+          .storeDropdown
+            ul#storeUl
+        .help.bannerLinks
+          .fas.fa-question-circle
+          .bannerLinksText Help
+      .flashes#bannerFlashes
+    block content

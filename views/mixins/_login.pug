@@ -1,0 +1,11 @@
+mixin login()
+    .login.card
+        h3.introH3 Login
+        hr
+        form(action="/login" method="POST" id="loginForm")
+            label(for="email") Email 
+            input.loginInput(type="email" name="email" placeholder="email" id="loginEmail" autofocus)
+            label(for="password") Password
+            input.loginInput(type="password" name="password" placeholder="password" id="loginPassword")
+            br
+        button.submitButton(onClick='login()') Login
