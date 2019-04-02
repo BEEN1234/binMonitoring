@@ -1,0 +1,87 @@
+var binMaster = {};
+
+document.onload = autoLogin();
+
+function autoLogin(){//halp
+    var authToken = localStorage.getItem('authToken');
+
+    const Data = {authToken: authToken};
+    const http = new XMLHttpRequest();
+    http.open('POST', 'http://localhost:3000/autoLogin');
+    http.setRequestHeader('Content-Type', 'application/json')
+    http.send(JSON.stringify(Data));
+    http.onreadystatechange = () => {
+        if(http.readyState === 4 && http.status === 200){
+            binMaster = JSON.parse(http.response);
+        }
+    }
+}
+
+function linearizeBin(bin, cb){
+    for(let i=0; i<bin.cables.length; i++){
+        for(let j=0; j<bin.cables[i].sensors.length; j++){
+            cb(bin, i, j);
+        };
+    };
+}
+
+function sendIt(Data){
+    const http = new XMLHttpRequest();
+    http.open('POST', 'http://localhost:3000/sensors/alerts');
+    http.setRequestHeader('Content-Type', 'application/json')
+    http.send(JSON.stringify(Data));
+    http.onreadystatechange = () => {
+        if(http.readyState === 4 && http.status === 200){
+            // binMaster = JSON.parse(http.response);
+            console.log('http.response: '+ JSON.stringify(http.response));
+        }
+    }
+}
+
+function setBin(bin){
+    var array =[]
+    var temp = document.getElementById("set"+bin).value;
+    binMaster.bins.forEach((eachBin) => {
+        if(eachBin.bin===bin){
+            // array of id's...
+            linearizeBin(eachBin, (eachBin, index, jcount) => {
+                array.push({
+                    _id: eachBin.cables[index].sensors[jcount],
+                    set: temp,
+                    muted: false
+                });
+            });
+        }
+    });
+    console.log('array: '+ JSON.stringify(array));
+    var data = {
+        user: localStorage.getItem('authToken'),
+        data: array
+    }
+    sendIt(data);
+}
+
+
+function muteBin(bin){
+
+}
+
+function setCable(bin, cable){
+    
+}
+
+function muteCable(bin, cable){
+
+}
+
+function setSensor(id){
+
+}
+
+function muteSensor(id){
+
+}
+
+function sendRequest(array){
+
+}

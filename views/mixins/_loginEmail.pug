@@ -1,10 +1,10 @@
-mixin login()
+mixin loginEmail()
     .login.card
         h3.introH3 Login
         hr
         form(action="/login" method="POST" id="loginForm")
-            label(for="email") Email 
-            input.loginInput(type="email" name="email" placeholder="email" id="loginEmail" autofocus)
+            label(for="user") Email 
+            input.loginInput(type="email" name="user" placeholder="email" id="loginUser" autofocus)
             label(for="password") Password
             input.loginInput(type="password" name="password" placeholder="password" id="loginPassword")
             br

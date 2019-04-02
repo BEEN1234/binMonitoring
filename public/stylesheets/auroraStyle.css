@@ -33,16 +33,15 @@ body {
 }
 
 .banner {
-    width: 100vw;
+    width: 100%;
     left: 0px;
     box-sizing: border-box;
+    -webkit-box-sizing: border-box;
     padding: 0 1vw 0 1vw;
     margin: 0 1px 0 1px;
     position: relative;
     
     display: table-cell;
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
 }
 
 #topBanner {
@@ -282,6 +281,27 @@ form > label {
     border-radius: 5px;
 }
 
+#loginUserFirst, #registerUserFirst, #registerUserFirstConfirm {width: 15%}
+#loginUserSecond, #registerUserSecond, #registerUserSecondConfirm {width: 15%}
+#loginUserThird, #registerUserThird, #registerUserThirdConfirm {width: 50%}
+
+.loginUserContainer, .registerUserContainer, .registerUserConfirmContainer {
+    width: 100%;
+    overflow: hidden;
+}
+
+.loginUserContainer > * {
+    float: left;
+}
+
+.registerUserContainer > * {
+    float: left;
+}
+
+.registerUserConfirmContainer > * {
+    float: left;
+}
+
 .readoutSpacer {
     height: 50px;
     width: 100%;
@@ -312,10 +332,14 @@ form > label {
 .readoutBanner > * {
     height: 100%;
     display: table-cell;
-    width: auto;
+    width: 20%;
     position: relative;
     box-sizing: border-box;
 
+}
+
+.readoutLinksContainer {
+    margin: auto;
 }
 
 .readoutBanner .bannerLinksText {

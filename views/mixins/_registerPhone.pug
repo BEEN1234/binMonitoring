@@ -1,0 +1,31 @@
+mixin registerPhone()
+    .register.card
+        h3.introH3 Register
+        hr
+        form(action="/register" method="POST" id="registerForm")
+            label(for="user") Phonenumber
+            .registerUserContainer
+                p +1
+                input.registerInputPhone.registerInput(name="user" placeholder="123" id="registerUserFirst" autofocus)
+                p -
+                input.registerInputPhone.registerInput(placeholder="456" id="registerUserSecond")
+                p -
+                input.registerInputPhone.registerInput(placeholder="7890" id="registerUserThird")
+            br
+            label(for="userConfirm") Confirm your Phonenumber
+            .registerUserConfirmContainer
+                p +1
+                input.registerInputPhone.registerInput(name="userConfirm" placeholder="123" id="registerUserFirstConfirm" autofocus)
+                p -
+                input.registerInputPhone.registerInput(placeholder="456" id="registerUserSecondConfirm")
+                p -
+                input.registerInputPhone.registerInput(placeholder="7890" id="registerUserThirdConfirm")
+            br
+            label(for="password") Enter your Password
+            input.registerInput(type="password" name="password" placeholder="password" id="registerPassword")
+            br
+            label(for="passwordConfirm") Please confirm your password
+            input.registerInput(type="password" name="passwordConfirm" placeholder="password" id="registerPasswordConfirm")
+            br
+            //- button.submitButton Register
+        button.submitButton(onClick='register()') Register

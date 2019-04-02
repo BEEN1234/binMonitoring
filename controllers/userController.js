@@ -9,24 +9,23 @@ Sensor = mongoose.model('SensorSchema');
 require('passport-local');
 
 exports.sanitizeEmail = (req, res, next) => {
-  req.body.email = validator.trim(req.body.email);
-  req.body.email = validator.normalizeEmail(req.body.email);
+  req.body.user = validator.trim(req.body.user);
+  req.body.user = validator.normalizeEmail(req.body.user);
   next();
 }
 
 exports.validateRegister = async (req, res, next) => {
-  //help... errors - originId and msg
   function errorObjGen(originId, msg){
     this.originId = originId,
     this.msg = msg
   }
   req.myErrors = [];
   var skipBool = false;
-  if(validator.isEmpty(req.body.email)){
-    req.myErrors.push(new errorObjGen("Email", "Please supply an email"));
+  if(validator.isEmpty(req.body.user)){
+    req.myErrors.push(new errorObjGen("user", "Please supply a phone number"));
   };
-  if(!validator.isEmail(req.body.email)){
-    req.myErrors.push(new errorObjGen("Email", "Invalid email, this user may already exist"));
+  if(!validator.isEmail(req.body.user)){
+    req.myErrors.push(new errorObjGen("user", "Invalid phonenumber, this user may already exist"));
     skipBool = true;
   };
 
@@ -35,20 +34,48 @@ exports.validateRegister = async (req, res, next) => {
   };
 
   if(!skipBool){ //how skip this for login auth? ultimately I just want to be sure it's not empty
-    const user = await User.findOne({email: req.body.email}); //didnt' work
+    const user = await User.findOne({user: req.body.user}); //didnt' work
     if(user){
-      req.myErrors.push(new errorObjGen("", "Invalid email, this user may already exist"));
+      req.myErrors.push(new errorObjGen("", "Invalid phonenumber, this user may already exist"));
+    };
+  }
+  next();
+}
+
+exports.validateRegisterPhone = async (req, res, next) => {
+  function errorObjGen(originId, msg){
+    this.originId = originId,
+    this.msg = msg
+  }
+  req.myErrors = [];
+  var skipBool = false;
+  if(validator.isEmpty(req.body.user)){
+    req.myErrors.push(new errorObjGen("user", "Please supply a phone number"));
+  };
+  if(req.body.user.length !== 10 || !validator.isDecimal(req.body.user)){
+    req.myErrors.push(new errorObjGen("user", "Invalid phonenumber, this user may already exist"));
+    skipBool = true;
+  };
+
+  if(validator.isEmpty(req.body.password)){
+    req.myErrors.push(new errorObjGen("Password", "Please supply a password"));
+  };
+
+  if(!skipBool){ //how skip this for login auth? ultimately I just want to be sure it's not empty
+    const user = await User.findOne({user: req.body.user}); //didnt' work
+    if(user){
+      req.myErrors.push(new errorObjGen("", "Invalid phonenumber, this user may already exist"));
     };
   }
   next();
 }
 
 exports.validateLogin = async (req, res, next) => {
-  if(validator.isEmpty(req.body.email)){
-    req.myErrors.push(new errorObjGen("Email", "Please supply an email"));
+  if(validator.isEmpty(req.body.user)){
+    req.myErrors.push(new errorObjGen("user", "Please supply an phonenumber"));
   };
-  if(!validator.isEmail(req.body.email)){
-    req.myErrors.push(new errorObjGen("Email", "Invalid email, this user may already exist"));
+  if(!validator.isEmail(req.body.user)){
+    req.myErrors.push(new errorObjGen("user", "Invalid phonenumber"));
     skipBool = true;
   };
   if(validator.isEmpty(req.body.password)){
@@ -62,25 +89,42 @@ exports.validateLogin = async (req, res, next) => {
   }
 }
 
+exports.validateLoginPhone = async (req, res, next) => {
+  function errorObjGen(originId, msg){
+    this.originId = originId,
+    this.msg = msg
+  }
+  req.myErrors = [];
+  if(validator.isEmpty(req.body.user)){
+    req.myErrors.push(new errorObjGen("user", "Please supply a phone number"));
+  };
+  if(req.body.user.length !== 10 || !validator.isDecimal(req.body.user)){
+    req.myErrors.push(new errorObjGen("user", "Invalid phonenumber"));
+    skipBool = true;
+  };
+  if(validator.isEmpty(req.body.password)){
+    req.myErrors.push(new errorObjGen("Password", "Please supply a password"));
+  };
+  next();
+}
+
 exports.registerUser = async (req, res, next) => {
-  //unaltered email in case
   if(req.myErrors.length){
-    // console.log('found errors in register user');
     return res.status(400).json({ errors: req.myErrors });
   }
   else{
     // console.log('at least within registerUser else');//delme
-    user = new User({email: req.body.email});//del me
+    const user = new User({user: req.body.user});//del me
     await user.setPassword(req.body.password);
     // console.log('user: '+ JSON.stringify(user));
-    await user.save(); //with this commented out it works, but this causes dupe key error
+    await user.save();
     next();
   };
 }
 
 exports.setupCable = async (req, res) => {
-  const user = await User.findOneAndUpdate({email: req.body.user}, {$pull: {'binMaster.vCables': {id: req.body.id}}});
-  const sameUser = await User.findOne({email: req.authorizedUser});
+  const user = await User.findOneAndUpdate({user: req.authorizedUser}, {$pull: {'binMaster.vCables': {id: req.body.id}}});
+  const sameUser = await User.findOne({user: req.authorizedUser});//this is all stupid
 
   if(!validator.isAlphanumeric(req.body.bin.bin)){
     req.errors.push("Please only use letters and numbers");
@@ -104,21 +148,11 @@ exports.setupCable = async (req, res) => {
     return;
   };
 
-  //1. need to swap id array with _id under sensors
-  //2. stamp the sensor with owner, muted, and alert temp
-
-  //1
   var promiseArray = [];
   var sensors = req.body.bin.cables[0].sensors
   sensors.forEach((sensor) => {
-    // console.log('sensor: '+ JSON.stringify(sensor)); //werks
-    promiseArray.push(Sensor.findOne({id: sensor}));
+    promiseArray.push(Sensor.findOneAndUpdate({id: sensor}, {owner: req.authorizedUser, muted: false}));
   });
-  // console.log('sensors: '+ JSON.stringify(sensors));//werks it's an array
-
-  //delMe: 
-    // const resAROO = await Sensor.findOne({id: sensors[0]});
-    // console.log('resAROO: '+ JSON.stringify(resAROO));//werks
 
   const results = await Promise.all(promiseArray);
   const Sensor_ids = [];

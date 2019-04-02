@@ -1,20 +1,8 @@
 const fifteenMin = 15*60*1000;
-
-// binMaster = {ownedCables:[], bins:[], vCables:[{sensors:["28FF8BB161170400","28FF0FAD611704FE","28FF86AD611704C6","28FFEFAC611704AB"], _id:"5c948d1f5e322225b82f594b",id:4,class:"4s-20ft-cable"}],user:"a@hotmail.com"}
 var binMaster = {};
 window.addEventListener("load", acPopulateStore());
 window.addEventListener("load", autoLogin());
 // document.getElementsByClassName("userControl")[0].addEventListener("click", logout());//for some reason this is running on load
-// window.addEventListener("load", populateSetupCables());
-
-//append user to storage api
-//start using auth tokens
-    //I really want to have a read authkey and a write authkey
-    //I also want an ip hashing secret lookup mech
-    //reset password through email
-    //I suppose my javascript will need to automagically check for stored info and then log in with it
-    //localStorage.setItem('authToken', authToken);
-    //login and register
 
 function buildBinsDiv(binMaster){
     const binCardHTML = '<div class="binHeader"><h3 class="binH3">BinName</h3><p class="binTempHighest">H</p><p>/</p><p class="binTempAverage">A</p></div><div class="binBackground"></div><div class="binCables"><h3>Cables: </h3><table class="cableTable"></table></div>';
@@ -23,7 +11,6 @@ function buildBinsDiv(binMaster){
     if(binMaster){
         for (var i=0; i<binMaster.bins.length; i++) {
             let thisBin = binMaster.bins[i];
-            //genBin
             buildABin(thisBin, binCardHTML, binsDiv);
         };
     };
@@ -39,17 +26,19 @@ function buildABin(binMasterBin, binInnerHtml, parentNode){
     binCardTitle.innerHTML = binMasterBin.bin;
     newBinCard.getElementsByClassName('binTempHighest')[0].id = binMasterBin.bin + 'Temp' + 'Highest';
     newBinCard.getElementsByClassName('binTempAverage')[0].id = binMasterBin.bin + 'Temp' + 'Average';
-    genRow('th', cableTable, binMasterBin.bin, ...binMasterBin.cables);
+    genRow(false, 'th', cableTable, binMasterBin.bin, ...binMasterBin.cables);
     parentNode.appendChild(newBinCard);
 }
-
-function genRow(th, table, binName, ...cables){
+//need a mute button and number field. clicking the manage button loads in the current states. should be pretty easy
+//alerts will have to just say - problem, look up online;
+//
+function genRow(alertsBool, th, table, binName, ...cables){//to refit for manage alerts- just need a unique id? then I'll append inner html after?
     const row = document.createElement('tr');
     for (var j=0; j<cables.length; j++) {
         let cable = cables[j];
         let cell = document.createElement(th);
         cell.id = binName + '-%$&%-' + cable.cable + '-%$&%-' + (table.children.length - 1);
-        th === 'th' ? cell.innerHTML = cable.cable : cell.innerHTML = '';
+        th === 'th' ? cell.innerHTML = cable.cable : cell.innerHTML = '';//if alertBool innerhtml = cable.cable +set whole cable: input set mute
         row.appendChild(cell); //
     }
     table.appendChild(row);
@@ -58,13 +47,13 @@ function genRow(th, table, binName, ...cables){
     for (var i=0; i<cables.length; i++) {
         if(cables[i].sensors.length > longestCable){
             longestCable = cables[i].sensors.length
-        }; //todo. make more readable by moving this and longestCable out of this whole loop and declaration
+        };
     }
     if(table.children.length === (longestCable + 1)){//how to know -> if table.children.length === ...cable.length.
         return;
     }
     else {
-        genRow('td', table, binName, ...cables);
+        genRow(alertsBool, 'td', table, binName, ...cables);
     };
 }
 
@@ -169,32 +158,88 @@ function setTempById(id, temp){
     //can add style later
 }
 
+function getUserInput(login=true, confirm=false){
+    //divName - login or register div name
+    var childrenClass = '';
+    if(login){
+        childrenClass = "loginInput";
+    }
+    else{
+        childrenClass = "registerInput";
+    }
+    var parentClass = '';
+    if(login){
+        if(confirm){
+            var parentClass = "loginUserConfirmContainer";
+        }
+        else{
+            var parentClass = "loginUserContainer";
+        };
+    }
+    else{
+        if(confirm){
+            var parentClass = "registerUserConfirmContainer";
+        }
+        else{
+            var parentClass = "registerUserContainer";
+        };
+    };
+    var parent = document.getElementsByClassName(parentClass)[0];
+    var input = parent.getElementsByClassName(childrenClass);
+    var phonenumber = "";
+    var failure = false;
+    var re = /[0-9]/;
+    for(let i=0; i<input.length; i++){
+        if(input[i].value.length!==3 && i<2){
+            input[i].style.borderColor = "red";
+            addFlash("failure", "Please use only 3 numbers for the phone number", "bannerFlashes", 2000);
+            failure = true;
+            break;
+        };
+        if(input[i].value.length!==4 && i===2){
+            input[i].style.borderColor = "red";
+            addFlash("failure", "Please use only 4 numbers for the phone number", "bannerFlashes", 2000);
+            failure = true;
+            break;
+        };
+        for(let j=0; j<input[i].value.length; j++){
+            if(re.exec(input[i].value[j]) === null){
+                input[i].style.borderColor = "red";
+                addFlash("failure", "Only use 0-9 in your phone number", "bannerFlashes", 2000);
+                failure = true;
+                break;
+            }
+        };
+        phonenumber += input[i].value;//.length < || > 3, or 4?
+    };
+    if(failure){return false}
+    else return phonenumber;
+}
+
 function register(){
     //empty out flashes
-    while(document.getElementsByClassName("registerFlash").length){
-        let delMe = document.getElementsByClassName("registerFlash")[0];
-        delMe.parentNode.removeChild(delMe);
-    };
     for (var i=0; i<document.getElementsByClassName('registerInput').length; i++) {
         document.getElementsByClassName('registerInput')[i].style.borderColor = "#67d567";
     };
 
     //get form data
-    const email = document.getElementById('registerEmail').value;
-    const emailConfirm = document.getElementById('registerEmailConfirm').value;
+    const user = getUserInput(false, false);
+    if(!user){return};
+    const userConfirm = getUserInput(false, true);
+    if(!userConfirm){return};
     const password = document.getElementById('registerPassword').value;
     const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
     var returnVar = false;
 
     //front end validation
-    if(!email){
-        addFlash("registerFlash failure", "Oops, your email is empty");
-        document.getElementById('registerEmail').style.borderColor = "red";
+    if(!user){
+        addFlash("registerFlash failure", "Oops, your phone number is empty");
+        document.getElementById('registerUser').style.borderColor = "red";
         returnVar = true;
     };
-    if(!emailConfirm){
-        addFlash("registerFlash failure", "Oops, your email confirmation is empty");
-        document.getElementById('registerEmailConfirm').style.borderColor = "red";
+    if(!userConfirm){
+        addFlash("registerFlash failure", "Oops, your phone number confirmation is empty");
+        document.getElementById('registerUserConfirm').style.borderColor = "red";
         returnVar = true;
     };
     if(!password){
@@ -207,9 +252,9 @@ function register(){
         document.getElementById('registerPasswordConfirm').style.borderColor = "red";
         returnVar = true;
     };
-    if(email !== emailConfirm){
-        addFlash("registerFlash failure", "Oops, your emails don't match");
-        document.getElementById('registerEmailConfirm').style.borderColor = "red";
+    if(user !== userConfirm){
+        addFlash("registerFlash failure", "Oops, your phone numbers don't match");
+        document.getElementById('registerUserConfirm').style.borderColor = "red";
         returnVar = true;
     };
     if(password !== passwordConfirm){
@@ -221,11 +266,9 @@ function register(){
     if(returnVar){return};
     
     const Data = {
-        email: email,
-        // emailConfirm: emailConfirm,
+        user: user,
         password: password
-        // passwordConfirm: passwordConfirm
-    }
+    }//try to combine this with login?
 
     const http = new XMLHttpRequest();
     http.open('POST', 'http://localhost:3000/register');
@@ -235,7 +278,6 @@ function register(){
         if(http.readyState === 4 && http.status === 200){
             addFlash('success', 'You are registered', 'bannerFlashes', 2000);
             binMaster = JSON.parse(http.response);
-            binMaster.user = email;
             localStorage.setItem('authToken', binMaster.authToken);
             populateSetupCables();
             buildBinsDiv(binMaster);
@@ -246,7 +288,7 @@ function register(){
             errorsObj = JSON.parse(errorsObj); //test for proper response
             if(errorsObj.errors){
                 errorsObj.errors.forEach((err) => {
-                    addFlash('registerFlash failure', err.msg, 'bannerFlahses', 2000);
+                    addFlash('registerFlash failure', err.msg, 'bannerFlashes', 2000);
                 });
             };
         }
@@ -254,15 +296,17 @@ function register(){
 }
 
 function login(){
-    const email = document.getElementById('loginEmail').value;
+    for (var i=0; i<document.getElementsByClassName('loginInput').length; i++) {
+        document.getElementsByClassName('loginInput')[i].style.borderColor = "#67d567";
+    };
+    const user = getUserInput(true);
+    if(!user){return;};
     const password = document.getElementById('loginPassword').value;
 
     const Data = {
-        email: email,
+        user: user,
         password: password
     }
-
-    // validate Email
 
     const http = new XMLHttpRequest();
     http.open('POST', 'http://localhost:3000/login');
@@ -272,7 +316,6 @@ function login(){
         if(http.readyState === 4 && http.status === 200){
             addFlash('success', 'You are logged in!', 'bannerFlashes', 2000);
             binMaster = JSON.parse(http.response);
-            binMaster.user = email;
             localStorage.setItem('authToken', binMaster.authToken);
             populateSetupCables();
             buildBinsDiv(binMaster);
@@ -479,8 +522,6 @@ function addCableToBins(id){
                 let binsDiv = document.getElementById('bins');
                 let binCardHTML = '<div class="binHeader"><h3 class="binH3">BinName</h3><p class="binTempHighest">H</p><p>/</p><p class="binTempAverage">A</p></div><div class="binBackground"></div><div class="binCables"><h3>Cables: </h3><table class="cableTable"></table></div>';
                 bin.cables[0].sensors = responseSensors_ids;
-                console.log('for addCableToBins: ');
-                console.log('bin: '+ JSON.stringify(bin, null, 2));//weird weird weird. need to send
                 buildABin(bin, binCardHTML, binsDiv);
                 addFlash("success", "Bin added!", "bannerFlashes", 2000);//not logging.
             }
@@ -491,4 +532,3 @@ function addCableToBins(id){
         return;
     }
 }
-

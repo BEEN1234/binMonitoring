@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const errorHandler = require('../handlers/errorHandlers');
+
 require('../models/catalogue');
 require('../models/inventory');
 require('../models/user.js');
@@ -11,11 +13,11 @@ exports.populateStore = async (req, res) => {
     res.status(200).send(results);
 }
 
-exports.buy = async (req, res) => {
+exports.buy = async (req, res, next) => {
     //authenticate incoming request
-    const user = await User.findOne({email: req.authorizedUser});
+    const user = await User.findOne({user: req.authorizedUser});
     if(!user){
-        res.statuse(400).send("forbidden request");
+        res.status(400).send("forbidden request");
         return;
     };
     var product = await Inventory.findOneAndDelete({class: req.body.productClass}); //todo, clean this all up

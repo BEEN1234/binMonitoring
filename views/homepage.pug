@@ -1,21 +1,22 @@
 extends layout
-include mixins/_login
-include mixins/_register
+include mixins/_loginPhone
+include mixins/_registerPhone
 block content
     .introSpacer
     .introContainer
         .flashes#flashes
         .intro 
             .loginAndSampleContainer
-                +login()
+                +loginPhone()
                 .sample.card
                     h3.introH3 View Sample
                     hr
                     button.submitButton Go
             .registerContainer           
-                +register()
+                +registerPhone()
     .readoutSpacer
     .readoutBanner.banner
+        .readoutLinksContainer
             .bannerLinks
                 .bannerLinksText#setupCables Setup your cables:
                     table#setupCablesDropdown

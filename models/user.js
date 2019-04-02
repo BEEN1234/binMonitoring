@@ -4,13 +4,11 @@ const validator = require('validator');
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const UserSchema = new mongoose.Schema({
-    email: {
+    user: {
         type: String,
         trim: true,
         unique: true,
-        lowercase: true,
-        validate: [validator.isEmail, 'Invalid Email'],
-        required: 'Please supply an Email'
+        required: 'Please supply a user'
     },
     binMaster: {
         bins: [{
@@ -41,7 +39,7 @@ const UserSchema = new mongoose.Schema({
     }
 }); // I was pushing in an object that also had such and such
 
-UserSchema.plugin(passportLocalMongoose, {usernameField: 'email'});
+UserSchema.plugin(passportLocalMongoose, {usernameField: 'user'});
 module.exports=mongoose.model('UserSchema', UserSchema);
 
 //binMaster will be an array of id's each containing an array of timestamped reads, a cabe, and bin

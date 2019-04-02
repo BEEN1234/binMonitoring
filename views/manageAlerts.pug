@@ -1,0 +1,29 @@
+link(rel="stylesheet" href="/stylesheets/manageAlerts.css")
+//- each bin in binMaster.bins
+//-     .bins
+//-         h3 !{bin.bin}
+//-         h4.floatleft Set whole bin: 
+//-         input(class="floatleft" type="number" id="set"+bin.bin)
+//-         button(class="floatleft" onclick="setBin('"+bin.bin+"')") Set
+//-         h4(class="floatleft") Mute whole bin: 
+//-         button(onclick="muteBin('"+bin.bin+"')") mute
+//-     table(class=bin.bin+"table")
+//-         tr
+//-             each cable in bin.cables
+//-                 th
+//-                     h4.cableName cable name: !{cable.cable}
+//-                     p.floatleft Set whole cable: 
+//-                     input(class="floatleft" id="set"+bin.bin+cable.cable type="number")
+//-                     button(class="floatleft" onclick="setCable('"+bin.bin+"', '"+cable.cable+"')") Set
+//-                     p(class="floatleft") Mute whole Cable:
+//-                     button(class="floatleft" onclick="muteCable('"+bin.bin+"', '"+cable.cable+"')" id="mute"+bin.bin+cable.cable) mute
+//-         each sensor in bin.cables[0].sensors
+//-             tr
+//-                 each cable, index in bin.cables
+//-                     td 
+//-                         p.floatleft Set this sensor: 
+//-                         input(class="floatleft" type="number")
+//-                         button(class="floatleft" id="set"+bin.bin onclick="setSensor('"+cable.sensors[index]+"')") Set
+//-                         p(class="floatleft") Mute this sensor: 
+//-                         button(class="floatleft" onclick="muteSensor("+cable.sensors[index]+")") mute
+script(type="text/javascript" src="/javascripts/manageAlerts.js")
