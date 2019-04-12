@@ -9,11 +9,11 @@ const storeController = require('../controllers/storeController');
 var Sensor = mongoose.model('SensorSchema'); //problem at the red
 var User = mongoose.model('UserSchema');
 
-const { catchErrors } = require('../handlers/errorHandlers');
-
 router.get('/', async function(req, res) {
+  console.log('process.memoryUsage() after \'/\': '+ JSON.stringify(process.memoryUsage()));
   res.render('homepage');
 });
+router.get('/helloworld', (req, res) => {res.send("hello world")});
 
 router.post('/register', userController.validateRegisterPhone, userController.registerUser, authController.authorizeUser);
 // userController.sanitizeEmail, userController.validateRegister, userController.registerUser, authController.authorizeUser);

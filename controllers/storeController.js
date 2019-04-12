@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const errorHandler = require('../handlers/errorHandlers');
 
 require('../models/catalogue');
 require('../models/inventory');

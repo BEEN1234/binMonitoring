@@ -12,7 +12,7 @@ html
       .banner#topBanner
         .title#leftOfTheBanner
           h1.title Aurora
-        .userControl.bannerLinks#rightOfTheBanner 
+        .userControl.bannerLinks#rightOfTheBanner(onclick="logout()")
           .fas.fa-sign-out-alt
           .bannerLinksText Logout
         .store.bannerLinks
@@ -23,5 +23,18 @@ html
         .help.bannerLinks
           .fas.fa-question-circle
           .bannerLinksText Help
+      .readoutBanner.banner
+        .firstchild
+          .bannerLinks
+            .bannerLinksText#setupCables Setup your cables:
+                table#setupCablesDropdown
+                    tr
+                        th Cable ID
+                        th Select an existing bin
+                        th Name a new bin
+                        th Name the cable
+                        th
+          .bannerLinks
+            a(class="bannerLinksText" href="/sensors/alerts" target="_blank") Manage your alerts
       .flashes#bannerFlashes
     block content

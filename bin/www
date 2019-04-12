@@ -3,10 +3,9 @@
 /**
  * Module dependencies.
  */
-
 var debug = require('debug')('myapp:server');
 var http = require('http');
-require('dotenv').config({ path: 'variables.env' });
+// require('dotenv').config({ path: 'variables.env' });
 var mongoose = require('mongoose');
 
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });
@@ -38,6 +37,7 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
+// console.log('process.getMemory(): '+ JSON.stringify(process.memoryUsage())); //process.getMemory(): {"rss":85139456,"heapTotal":86790144,"heapUsed":47806920,"external":17910577}
 /**
  * Normalize a port into a number, string, or false.
  */

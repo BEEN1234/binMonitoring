@@ -75,7 +75,7 @@ function updateTemperatures(){
         body: JSON.stringify(Data),
     }
     if(binMaster.bins.length){
-        fetch('http://localhost:3000/sensorReads', fetchOptions)
+        fetch('/sensorReads', fetchOptions)
             .then((x) => { return x.json() })
             .then((x) => { return populateTemperatureFields(x) })
             .then((x) => {
@@ -271,7 +271,7 @@ function register(){
     }//try to combine this with login?
 
     const http = new XMLHttpRequest();
-    http.open('POST', 'http://localhost:3000/register');
+    http.open('POST', '/register');
     http.setRequestHeader('Content-Type', 'application/json')
     http.send(JSON.stringify(Data));
     http.onreadystatechange = () => {
@@ -309,7 +309,7 @@ function login(){
     }
 
     const http = new XMLHttpRequest();
-    http.open('POST', 'http://localhost:3000/login');
+    http.open('POST', '/login');
     http.setRequestHeader('Content-Type', 'application/json')
     http.send(JSON.stringify(Data));
     http.onreadystatechange = () => {
@@ -329,7 +329,7 @@ function autoLogin(){//halp
     if(authToken){
         const Data = {authToken: authToken};
         const http = new XMLHttpRequest();
-        http.open('POST', 'http://localhost:3000/autoLogin');
+        http.open('POST', '/autoLogin');
         http.setRequestHeader('Content-Type', 'application/json')
         http.send(JSON.stringify(Data));
         http.onreadystatechange = () => {
@@ -359,7 +359,7 @@ function logout(){ //get it working
 function acPopulateStore(){
     const ul = document.getElementById('storeUl');
     ul.innerHTML = '';
-    fetch('http://localhost:3000/store/populateStore')
+    fetch('/store/populateStore')
         .then((res) => {return res.json()})
         .then((res) => {
             //set store - title in title, class on button onclick call, description below
@@ -375,7 +375,7 @@ function acPopulateStore(){
 }
 
 function buyProduct(productClass){
-    var url = "http://localhost:3000/store/buy";
+    var url = "/store/buy";
     //add to frontend binMaster as well
     const authToken = localStorage.getItem('authToken');
     const Data = {
@@ -510,7 +510,7 @@ function addCableToBins(id){
         }
         //
         const http = new XMLHttpRequest();
-        http.open('POST', 'http://localhost:3000/user/setupCable');//need to use authController here! todo
+        http.open('POST', '/user/setupCable');//need to use authController here! todo
         http.setRequestHeader('Content-Type', 'application/json')
         http.send(JSON.stringify(Data));
         http.onreadystatechange = () => {

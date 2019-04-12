@@ -20,16 +20,11 @@ body {
 .bannerContainer {
     position: fixed;
     top: 0px;
-    overflow: visible;
+    /* change after commit 3 */
+    overflow: visible; 
+    background: linear-gradient(#67d567, #202020);
     width: 100%;
     z-index: 99;
-}
-
-.bannerSpacer {
-    height: 0;
-    width: 100%;
-    /* background-image: url('/images/bannerBackground.jpg');
-    background-size: auto 100%; */
 }
 
 .banner {
@@ -40,15 +35,16 @@ body {
     padding: 0 1vw 0 1vw;
     margin: 0 1px 0 1px;
     position: relative;
-    
-    display: table-cell;
+    /* change: */
+    /* display: table-cell; */
 }
 
 #topBanner {
     height: 70px;
-    background: linear-gradient(#67d567, #202020);
-    border-bottom: 1px solid #000000;
+    /* background: linear-gradient(#67d567, #202020); */
+    border-bottom: 1px solid #739b59;
     box-sizing: border-box;
+    z-index: 20;
 }
 
 /* 67d5d5 is cyan c1ff7b is some bs tan color */
@@ -58,6 +54,8 @@ body {
     min-width: 5%;
     border-bottom: 5px solid #67d567;
     height: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 .bannerLinks {
@@ -98,21 +96,17 @@ body {
     margin-right: 5%;
 }
 
-.store {
-
-}
-
 .storeDropdown {
-    top: 75px;
+    top: 70px;
     width: 35vw;
-    right: 0vw;
+    right: 0;
     display: none;
     position: absolute;
     background: linear-gradient(#202020,#161616);
     border: 1px solid black;
     color: #a3c5a3;
     /* text-shadow: none; */
-    box-shadow: 1px 1pxd 2px;
+    box-shadow: 1px 1px 2px;
 }
 
 .storeDropdown > * {
@@ -170,7 +164,7 @@ body {
 
 .introSpacer {
     top: 0px;
-    height: 70px;
+    height: 100px;
     width: 100%;
 }
 
@@ -184,7 +178,7 @@ body {
 }
 
 #bannerFlashes {
-    top: 75px;
+    top: 105px;
     position: absolute;
 }
 
@@ -302,52 +296,56 @@ form > label {
     float: left;
 }
 
-.readoutSpacer {
-    height: 50px;
-    width: 100%;
-    position: static;
-    display: block;
-}
-
 .readout {
     position: static;
-    margin-left: 8vw;
-    margin-right: 8vw;
-    min-height: 120vh;
+    margin: 30px;
 }
 
 .readoutBanner {
     z-index: 10;
     
-    position: sticky;
-    top: 76px;
+    position: static;
+    top: 70px;
     height: 30px;
     overflow: visible;
     box-sizing: border-box;
-    background: linear-gradient(#67d567, #415826);
+    -webkit-box-sizing: border-box;
+    /* background: linear-gradient(#67d567, #415826); */
     /* -color:  #F8333C; */
-    border: 1px solid #67d567;
+    border-bottom: 1px solid black;
 }
 
 .readoutBanner > * {
     height: 100%;
-    display: table-cell;
-    width: 20%;
+    /* change */
+    /* display: table-cell; */
+    width: 60%;
     position: relative;
     box-sizing: border-box;
-
-}
-
-.readoutLinksContainer {
+    -webkit-box-sizing: border-box;
     margin: auto;
 }
 
+.readoutBanner .bannerLinks {
+    float: left;
+    width: 49%;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    height: 100%;
+}
+
 .readoutBanner .bannerLinksText {
-    border-bottom: 3px solid red;
-    color: black;
-    text-shadow: none;
+    border-bottom: 3px solid #67d567;
+    /* color: white; */
     border-radius: 3px;
     box-sizing: border-box;
+    height: 100%;
+    text-decoration: none;
+}
+
+.readoutBanner a {
+    display: block;
+    width: 100%;
 }
 
 #setupCables:hover #setupCablesDropdown {
@@ -355,8 +353,8 @@ form > label {
 }
 
 #setupCablesDropdown {
-    top: 25px;
-    width: 100vw;
+    top: 29px;
+    width: 600px;
     height: auto;
     left: -1vw;
     background: red;
