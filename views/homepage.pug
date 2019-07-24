@@ -11,10 +11,12 @@ block content
                 .sample.card
                     h3.introH3 View Sample
                     hr
-                    button.submitButton Go
+                    button.submitButton(onClick='viewSample()') Go
             .registerContainer           
                 +registerPhone()
     .readout
         .flashes#readoutFlashes
+            .flash.warning#noBins
+                h3 no bins to show, visit the shop to purchase one
         #bins
     script(type="text/javascript" src="/javascripts/genBins.js")

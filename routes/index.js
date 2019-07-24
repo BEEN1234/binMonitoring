@@ -47,6 +47,19 @@ router.post('/sensorReads', authController.authorizeToken, async (req, res) => {
   res.status(200).send({sensorArray: sensorArray});
 });
 
+router.post('/sample/sensorReads', async (req, res)=>{
+  var sensorArray = req.body.sensorArray;
+  const promiseArray = [];
+  sensorArray.forEach((sensorId) => {
+    promiseArray.push(Sensor.findById(sensorId));
+  });
+  sensorArray = await Promise.all(promiseArray);
+  for (var i=0; i<sensorArray.length; i++) {
+    sensorArray[i] = sensorArray[i].reads.pop();
+  }
+  res.status(200).send({sensorArray: sensorArray});
+})
+
 router.get('/sensors/alerts', async (req, res) => {
   res.render('manageAlerts.pug');
 });

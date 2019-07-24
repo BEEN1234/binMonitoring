@@ -2,10 +2,108 @@ const fifteenMin = 15*60*1000;
 var binMaster = {};
 window.addEventListener("load", acPopulateStore());
 window.addEventListener("load", autoLogin());
+var sampleBool = false;//set this on sample
+let sampleObj = { //this mimmicks all the other things, but only in memory.
+    bins: [
+        {
+        cables: [
+        {
+        sensors: [
+            "5c9ff83c3ea6a81ad9584228",
+            "5c9ff83c3ea6a81ad9584229",
+            "5c9ff83c3ea6a81ad958422f",
+            "5c9ff83c3ea6a81ad9584234"
+        ],
+        _id: "5d38999b2f57bc3930aa8ba8",
+        cable: "centre"
+        }
+        ],
+        _id: "5d38999b2f57bc3930aa8ba7",
+        bin: "Sample Bin",
+        averageTemp: null,
+        maxTempOfBin: 0
+        }
+    ],
+    vCables: [
+        {
+        sensors: [
+            "5c9ff8303ea6a81ad95841fa",
+            "5c9ff8303ea6a81ad95841fd",
+            "5c9ff8303ea6a81ad95841ef",
+            "5c9ff8303ea6a81ad95841ff"
+        ],
+        _id: "5d3899152f57bc3930aa8ba3",
+        id: 4,
+        class: "4s-20ft-cable"
+        },
+        {
+        sensors: [
+            "5c9ff8303ea6a81ad95841da",
+            "5c9ff8303ea6a81ad95841ed",
+            "5c9ff8303ea6a81ad95841e3",
+            "5c9ff8303ea6a81ad95841ec"
+        ],
+        _id: "5d38998f2f57bc3930aa8ba5",
+        id: 3,
+        class: "4s-20ft-cable"
+        }
+    ],
+    addCableToBins(id){
+        const tr = document.getElementsByClassName("setupCable"+id)[0];
+    
+        var prevBin = "setupCablesBinName" + id;
+        var newBin = "setupCablesNewBinName" + id;
+        var cableName = "setupCablesCableName" + id;
+        prevBin = document.getElementById(prevBin).value;
+        newBin = document.getElementById(newBin).value;
+        cableName = document.getElementById(cableName).value;
+        let thisBin = {
+            cables: [],
+            bin: newBin,
+        }
+        let thisCable;
+        this.vCables.forEach((cable, index) => {
+            if(id === cable.id){
+                thisCable = this.vCables.splice(index, 1);
+                thisCable = thisCable[0];
+            }
+        });
+        thisCable.cable = cableName;
+        thisBin.cables.push(thisCable);
+        this.bins.push(thisBin);
+        tr.parentNode.removeChild(tr);
+        let cablesNum = this.vCables.length;
+        document.getElementById('cablesToSetup').innerHTML = cablesNum;
+        buildBinsDiv(sampleObj);
+        updateTemperatures();
+    }
+    /**each call has to cehck the bool? and then muse a memory method?
+     *add cable to bins
+     *get all the ids
+     * so i guess i'll set binMaster to sample and call build binsDiv each time?... all I need to do is get temps. easy. just a new route
+     * and ... 
+     * 
+     * cable to bins - super dupuer easy
+     * temperatures
+     * 
+     
+      */
+}
+
+function viewSample(){
+    sampleBool = true;
+    binMaster = sampleObj;
+    document.getElementsByClassName('introContainer')[0].style.display = "none";
+    buildBinsDiv(binMaster);
+    populateSetupCables();
+    updateTemperatures();
+}
+//on sample click need to buildBinsDiv. on add Cable need to 
+
 // document.getElementsByClassName("userControl")[0].addEventListener("click", logout());//for some reason this is running on load
 
 function buildBinsDiv(binMaster){
-    const binCardHTML = '<div class="binHeader"><h3 class="binH3">BinName</h3><p class="binTempHighest">H</p><p>/</p><p class="binTempAverage">A</p></div><div class="binBackground"></div><div class="binCables"><h3>Cables: </h3><table class="cableTable"></table></div>';
+    const binCardHTML = '<div class="binHeader"><h3 class="binH3">BinName</h3><p class="binTempHighest">Highest Temp</p><p>/</p><p class="binTempAverage">Average</p></div><div class="binBackground"></div><div class="binCables"><h3>Cables: </h3><table class="cableTable"></table></div>';
     const binsDiv = document.getElementById('bins');
     binsDiv.innerHTML = '';
     if(binMaster){
@@ -26,8 +124,10 @@ function buildABin(binMasterBin, binInnerHtml, parentNode){
     binCardTitle.innerHTML = binMasterBin.bin;
     newBinCard.getElementsByClassName('binTempHighest')[0].id = binMasterBin.bin + 'Temp' + 'Highest';
     newBinCard.getElementsByClassName('binTempAverage')[0].id = binMasterBin.bin + 'Temp' + 'Average';
-    genRow(false, 'th', cableTable, binMasterBin.bin, ...binMasterBin.cables);
+    genRow(false, 'th', cableTable, binMasterBin.bin, ...binMasterBin.cables);//recursive
     parentNode.appendChild(newBinCard);
+
+    // here update the temp too... but just of this bin?
 }
 //need a mute button and number field. clicking the manage button loads in the current states. should be pretty easy
 //alerts will have to just say - problem, look up online;
@@ -58,15 +158,18 @@ function genRow(alertsBool, th, table, binName, ...cables){//to refit for manage
 }
 
 function updateTemperatures(){
-    const sensorIdArray = []
+    let url;
+    if(sampleBool) url = '/sample/sensorReads';
+    else url = '/sensorReads';
+    const sensorIdArray = [];
     linearizeBinMaster((bin, cable, sensor, k, counter) => {
         sensorIdArray.push(sensor);
     });
 
     const Data = {
         sensorArray: sensorIdArray,
-        authToken: localStorage.getItem('authToken')
     };
+    if(!sampleBool) Data.authToken = localStorage.getItem('authToken');
 
     const fetchOptions = {
         method: "POST",
@@ -75,7 +178,7 @@ function updateTemperatures(){
         body: JSON.stringify(Data),
     }
     if(binMaster.bins.length){
-        fetch('/sensorReads', fetchOptions)
+        fetch(url, fetchOptions)
             .then((x) => { return x.json() })
             .then((x) => { return populateTemperatureFields(x) })
             .then((x) => {
@@ -113,15 +216,24 @@ function populateTemperatureFields(fetchResponse){
         }
         var read = fetchResponse.sensorArray[counter].read;
         var time = fetchResponse.sensorArray[counter].time;
-        time = new Date(time).getTime();
+        time = new Date(time).getTime(); //here check if it's more than 15 minutes from now
+
+        let now = Date.now();
+        let oldUpdateBool = false;
+        if((now - time) > fifteenMin) oldUpdateBool = true;
 
         let cell = document.getElementById(bin.bin + '-%$&%-' + cable.cable + '-%$&%-' + k);
-        cell.innerHTML = read/10 + '<sup>o</sup>C';
+        if(oldUpdateBool){
+            cell.innerHTML = "no update";
+        }
+        else{
+            cell.innerHTML = read/10 + '<sup>o</sup>C';
+            runningTempTotal += read;
+            if(read > maxTempOfBin) maxTempOfBin = read;
+            numberOfSensors++;
+        };
 
-        runningTempTotal += read;
-        if(read > maxTempOfBin) maxTempOfBin = read;
         if(time > mssSensorUpdate) mssSensorUpdate = time; //global var
-        numberOfSensors++;
 
 
         bin.averageTemp = runningTempTotal/numberOfSensors;
@@ -129,7 +241,7 @@ function populateTemperatureFields(fetchResponse){
     });
 
     for (var i=0; i<binMaster.bins.length; i++) {
-        const bin = binMaster.bins[i]
+        const bin = binMaster.bins[i];
         setTempById(bin.bin + 'TempAverage', binMaster.bins[i].averageTemp);
         setTempById(bin.bin + 'TempHighest', binMaster.bins[i].maxTempOfBin);
     }
@@ -154,7 +266,7 @@ function linearizeBinMaster(cb){ //warning, this doesn't take an argument, but u
 
 function setTempById(id, temp){
     const element = document.getElementById(id);
-    element.innerHTML = temp/10 +'<sup>o</sup>C';
+    if(temp) element.innerHTML = temp/10 +'<sup>o</sup>C';
     //can add style later
 }
 
@@ -217,6 +329,8 @@ function getUserInput(login=true, confirm=false){
 }
 
 function register(){
+    sampleBool = false;
+    sampleObj = {};
     //empty out flashes
     for (var i=0; i<document.getElementsByClassName('registerInput').length; i++) {
         document.getElementsByClassName('registerInput')[i].style.borderColor = "#67d567";
@@ -279,6 +393,8 @@ function register(){
             addFlash('success', 'You are registered', 'bannerFlashes', 2000);
             binMaster = JSON.parse(http.response);
             localStorage.setItem('authToken', binMaster.authToken);
+            document.getElementsByClassName('introContainer')[0].style.display = "none";
+            document.getElementById('noBins').style.display = "block"
             populateSetupCables();
             buildBinsDiv(binMaster);
             updateTemperatures();
@@ -296,6 +412,8 @@ function register(){
 }
 
 function login(){
+    sampleBool = false;
+    sampleObj = {};
     for (var i=0; i<document.getElementsByClassName('loginInput').length; i++) {
         document.getElementsByClassName('loginInput')[i].style.borderColor = "#67d567";
     };
@@ -317,14 +435,27 @@ function login(){
             addFlash('success', 'You are logged in!', 'bannerFlashes', 2000);
             binMaster = JSON.parse(http.response);
             localStorage.setItem('authToken', binMaster.authToken);
+            document.getElementsByClassName('introContainer')[0].style.display = "none";
+            if(binMaster.ownedCables.length === 0) document.getElementById('noBins').style.display = "block";
             populateSetupCables();
             buildBinsDiv(binMaster);
             updateTemperatures();
         }
+        else if(http.readyState === 4 && http.status === 400){
+            var errorsObj = http.response;
+            errorsObj = JSON.parse(errorsObj); //test for proper response
+            if(errorsObj.errors){
+                errorsObj.errors.forEach((err) => {
+                    addFlash('registerFlash failure', err.msg, 'bannerFlashes', 2000);
+                });
+            };
+        }
     }
 }
 
-function autoLogin(){//halp
+function autoLogin(){
+    sampleBool = false;
+    sampleObj = {};
     var authToken = localStorage.getItem('authToken');
     if(authToken){
         const Data = {authToken: authToken};
@@ -339,6 +470,7 @@ function autoLogin(){//halp
                 buildBinsDiv(binMaster);
                 updateTemperatures();
                 document.getElementsByClassName('introContainer')[0].style.display = "none";
+                if(binMaster.ownedCables.length === 0) document.getElementById('noBins').style.display = "block";
             }
         }
     }
@@ -347,12 +479,14 @@ function autoLogin(){//halp
     }
 }
 
-function logout(){ //get it working
+function logout(){//todo, remove reload() and reset the whole cablesToSetup and dropdown deal. 
     binMaster = {};
     localStorage.setItem('authToken', '');
-    document.getElementsByClassName('introContainer')[0].style.display = "block";
-    document.getElementsByClassName('introContainer')[0].style.visibility = "visible";
-    document.getElementById('bins').innerHTML = "";
+    location.reload();
+    // document.getElementsByClassName('introContainer')[0].style.display = "block";
+    // document.getElementsByClassName('introContainer')[0].style.visibility = "visible";
+    // document.getElementById('noBins').style.display = "none";
+    // document.getElementById('bins').innerHTML = "";
 }
 
 //ac for asynchronous chain -> this will be background scripts that start onload and prepare other parts of my site
@@ -389,6 +523,9 @@ function buyProduct(productClass){
     http.onreadystatechange = () => {
         if(http.readyState === 4 && http.status === 200){
             binMaster.vCables.push(JSON.parse(http.response));
+            let cablesNum = binMaster.vCables.length;
+            document.getElementById('cablesToSetup').innerHTML = cablesNum;
+            if(binMaster.ownedCables.length > 0) document.getElementById('noBins').style.display = "none";
             populateSetupCables();//wat
         }
     }
@@ -445,6 +582,9 @@ function populateSetupCables() {
             tr.innerHTML = "<td>cable - "+id+"</td><td><select id=\"setupCablesBinName"+id+"\">"+selectHtml+"</select></td><td><input type=\"text\" id=\"setupCablesNewBinName"+id+"\"></td><td><input type=\"text\" id=\"setupCablesCableName"+id+"\"></td><td><button onclick=\"addCableToBins("+id+")\">Add Cable!</button></td>";
             table.appendChild(tr);
         });
+
+        let cablesNum = binMaster.vCables.length;
+        document.getElementById('cablesToSetup').innerHTML = cablesNum;
     };
 }
 
@@ -464,6 +604,10 @@ function generateBinSelect(){
 }
 
 function addCableToBins(id){
+    if(sampleBool){
+        sampleObj.addCableToBins(id);
+        return;
+    }
     const tr = document.getElementsByClassName("setupCable"+id)[0];
     
     var prevBin = "setupCablesBinName" + id;
@@ -473,7 +617,7 @@ function addCableToBins(id){
     newBin = document.getElementById(newBin).value;
     cableName = document.getElementById(cableName).value;
 
-    if(!prevBin === "none"){alert("not supported yet")} //delme
+    if(prevBin !== "none"){alert("not supported yet")} //delme
     else if(newBin){
         if(!cableName){
             addFlash("failure", "No cable name supplied", "bannerFlashes", 2000);
@@ -489,19 +633,19 @@ function addCableToBins(id){
         binMaster.vCables.forEach((cable, index) => {
             if(cable.id === id){
                 sensors = cable.sensors;
-                binMaster.vCables.splice(index, 1); //testMe todo delme-not actually just could be buggy
+                binMaster.vCables.splice(index, 1); //testMe todo delme- i would prefer this to happen in the status200 block
+                let cablesNum = binMaster.vCables.length;
+                document.getElementById('cablesToSetup').innerHTML = cablesNum;
             }
         });
+
         let bin = {
             bin: newBin,
             cables: [{
                 cable: cableName,
                 sensors: sensors
             }]
-        }//sweet baby jesus... not sending sensors
-        tr.parentNode.removeChild(tr);
-        //addBinToDiv
-        //update db as well
+        }
         const Data = {
             user: binMaster.user,
             authToken: localStorage.getItem('authToken'),
@@ -515,6 +659,12 @@ function addCableToBins(id){
         http.send(JSON.stringify(Data));
         http.onreadystatechange = () => {
             if(http.readyState === 4 && http.status === 200){
+                binMaster.vCables.forEach((cable, index) => {
+                    if(cable.id === id){
+                        binMaster.vCables.splice(index, 1); //testMe todo delme- i would prefer this to happen in the status200 block
+                    }
+                });
+                tr.parentNode.removeChild(tr);
                 var response = JSON.parse(http.response);
                 var responseSensors_ids = response.sensors_ids;
                 bin.cables[0].sensors = responseSensors_ids;
@@ -523,8 +673,16 @@ function addCableToBins(id){
                 let binCardHTML = '<div class="binHeader"><h3 class="binH3">BinName</h3><p class="binTempHighest">H</p><p>/</p><p class="binTempAverage">A</p></div><div class="binBackground"></div><div class="binCables"><h3>Cables: </h3><table class="cableTable"></table></div>';
                 bin.cables[0].sensors = responseSensors_ids;
                 buildABin(bin, binCardHTML, binsDiv);
-                addFlash("success", "Bin added!", "bannerFlashes", 2000);//not logging.
+                updateTemperatures();
+                addFlash("success", "Bin added!", "bannerFlashes", 2000);
             }
+            else if(http.readyState === 4 && http.status === 400){
+                addFlash("failure", "Oops, something went wrong, please check your inputs", "bannerFlashes", 2000);
+            }
+            else if(http.readyState === 4 && http.status === 500){
+                addFlash("failure", "Oops, something went wrong, please try again later", "bannerFlashes", 2000);
+            }
+            
         }
     }
     else {

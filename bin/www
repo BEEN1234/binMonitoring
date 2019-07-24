@@ -5,7 +5,7 @@
  */
 var debug = require('debug')('myapp:server');
 var http = require('http');
-// require('dotenv').config({ path: 'variables.env' });
+require('dotenv').config({ path: 'variables.env' });
 var mongoose = require('mongoose');
 
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });

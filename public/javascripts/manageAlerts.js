@@ -7,7 +7,7 @@ function autoLogin(){//halp
 
     const Data = {authToken: authToken};
     const http = new XMLHttpRequest();
-    http.open('POST', 'http://localhost:3000/sensors/autoLogin');
+    http.open('POST', '/sensors/autoLogin');
     http.setRequestHeader('Content-Type', 'application/json')
     http.send(JSON.stringify(Data));
     http.onreadystatechange = () => {
@@ -83,7 +83,7 @@ function sendIt(array, settingAlert=true){
         settingAlert: settingAlert
     }
     const http = new XMLHttpRequest();
-    http.open('POST', 'http://localhost:3000/sensors/alerts');
+    http.open('POST', '/sensors/alerts');
     http.setRequestHeader('Content-Type', 'application/json')
     http.send(JSON.stringify(Data));
     http.onreadystatechange = () => {

@@ -157,7 +157,7 @@ exports.setupCable = async (req, res) => {
   const results = await Promise.all(promiseArray);
   const Sensor_ids = [];
   for(let i=0; i<results.length; i++){
-    Sensor_ids.push(results[i]._id);
+    Sensor_ids.push(results[i]._id);//delme
   };
   req.body.bin.cables[0].sensors = Sensor_ids;
 

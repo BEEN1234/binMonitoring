@@ -208,6 +208,16 @@ body {
     background: #c27878;
 }
 
+#noBins {
+    display: none;
+}
+
+.warning {
+    border: 5px solid #854c02;
+    border-radius: 5px;
+    background: #d37f00;
+}
+
 .intro {
     width: 100%;
     position: static;
@@ -350,6 +360,13 @@ form > label {
 
 #setupCables:hover #setupCablesDropdown {
     display: block;
+}
+
+#cablesToSetup {
+    background-color: #bd8a00;
+    border: 2px solid rgb(133, 97, 0);
+    border-radius: 15px;
+    padding: 4px;
 }
 
 #setupCablesDropdown {
