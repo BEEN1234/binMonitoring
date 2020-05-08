@@ -5,12 +5,7 @@ mixin loginPhone()
         form(action="/login" method="POST" id="loginForm")
             label(for="user") Phonenumber
             .loginUserContainer
-                p +1
-                input.loginInputPhone.loginInput(name="user" placeholder="123" id="loginUserFirst" autofocus)
-                p -
-                input.loginInputPhone.loginInput(placeholder="456" id="loginUserSecond")
-                p -
-                input.loginInputPhone.loginInput(placeholder="7890" id="loginUserThird")
+            input.loginInputPhone.loginInput(name="user" placeholder="#" id="loginUser" value="+1" autofocus)
             label(for="password") Password
             input.loginInput(type="password" name="password" placeholder="password" id="loginPassword")
             br

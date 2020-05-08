@@ -1,5 +1,6 @@
 const fifteenMin = 15*60*1000;
 var binMaster = {};
+const binCardHTML = '<div class="binHeader"><h3 class="binH3">BinName</h3><p class="binTempHighest">Highest Temp</p><p>/</p><p class="binTempAverage">Average</p></div><div class="binBackground"></div><div class="binCables"><h3>Cables: </h3><table class="cableTable"></table><p class="cableTableAlerts">** no update, using the newest values</p></div>';
 window.addEventListener("load", acPopulateStore());
 window.addEventListener("load", autoLogin());
 var sampleBool = false;//set this on sample
@@ -49,6 +50,7 @@ let sampleObj = { //this mimmicks all the other things, but only in memory.
         }
     ],
     addCableToBins(id){
+        
         const tr = document.getElementsByClassName("setupCable"+id)[0];
     
         var prevBin = "setupCablesBinName" + id;
@@ -103,7 +105,6 @@ function viewSample(){
 // document.getElementsByClassName("userControl")[0].addEventListener("click", logout());//for some reason this is running on load
 
 function buildBinsDiv(binMaster){
-    const binCardHTML = '<div class="binHeader"><h3 class="binH3">BinName</h3><p class="binTempHighest">Highest Temp</p><p>/</p><p class="binTempAverage">Average</p></div><div class="binBackground"></div><div class="binCables"><h3>Cables: </h3><table class="cableTable"></table></div>';
     const binsDiv = document.getElementById('bins');
     binsDiv.innerHTML = '';
     if(binMaster){
@@ -224,7 +225,7 @@ function populateTemperatureFields(fetchResponse){
 
         let cell = document.getElementById(bin.bin + '-%$&%-' + cable.cable + '-%$&%-' + k);
         if(oldUpdateBool){
-            cell.innerHTML = "no update";
+            cell.innerHTML = read/10 + '<sup>o</sup>C **';
         }
         else{
             cell.innerHTML = read/10 + '<sup>o</sup>C';
@@ -455,7 +456,6 @@ function login(){
 
 function autoLogin(){
     sampleBool = false;
-    sampleObj = {};
     var authToken = localStorage.getItem('authToken');
     if(authToken){
         const Data = {authToken: authToken};
@@ -670,7 +670,6 @@ function addCableToBins(id){
                 bin.cables[0].sensors = responseSensors_ids;
                 binMaster.bins.push(bin);
                 let binsDiv = document.getElementById('bins');
-                let binCardHTML = '<div class="binHeader"><h3 class="binH3">BinName</h3><p class="binTempHighest">H</p><p>/</p><p class="binTempAverage">A</p></div><div class="binBackground"></div><div class="binCables"><h3>Cables: </h3><table class="cableTable"></table></div>';
                 bin.cables[0].sensors = responseSensors_ids;
                 buildABin(bin, binCardHTML, binsDiv);
                 updateTemperatures();

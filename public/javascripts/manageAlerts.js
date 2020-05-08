@@ -2,7 +2,7 @@ var binMaster = {};
 
 document.addEventListener("load", autoLogin());
 
-function autoLogin(){//halp
+function autoLogin(){
     var authToken = localStorage.getItem('authToken');
 
     const Data = {authToken: authToken};
